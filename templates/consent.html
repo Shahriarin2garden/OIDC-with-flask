@@ -1,0 +1,16 @@
+<!-- flask-oidc-provider/templates/consent.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Consent</title>
+</head>
+<body>
+    <h2>Authorize Application</h2>
+    <p>Application <strong>{{ client_id }}</strong> is requesting access to the following scopes:</p>
+    <p>{{ scope }}</p>
+    <form method="POST">
+        <button type="submit">Authorize</button>
+    </form>
+</body>
+</html>
