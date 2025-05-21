@@ -28,6 +28,7 @@ The ID token, formatted as a signed JSON Web Token (JWT), encapsulates identity 
 
 ```mermaid
 ---
+---
 config:
   theme: redux-dark-color
   sequence:
@@ -40,26 +41,32 @@ config:
   look: handDrawn
 ---
 sequenceDiagram
-  actor Client as Client
-  actor User as User
-  actor AuthServer as Authorization Server
-  actor ResourceServer as `Resource Server`
+  participant Client as 💻 Client App
+  actor User as 👤 User
+  participant AuthServer as 🔐 Authorization<br/>Server
+  participant ResourceServer as 🗄️ Resource<br/>Server
   autonumber
-  Note over Client, User: User initiates authorization
-  Client ->>+ User: Redirect to /authorize<br/>(with code_challenge)
-  User ->>+ AuthServer: Enter credentials and consent
-  AuthServer -->>- User: Redirect back with auth code
-  Note over User, Client: User is redirected back to client
-  User ->>+ Client: Authorization Code in URL
-  Note over Client, AuthServer: Client exchanges code for tokens
-  Client ->>+ AuthServer:    POST /token
-  AuthServer -->>- Client: Responds with ID & Access Tokens
-  Note over Client, ResourceServer: Client accesses protected resources
-  Client ->>+ ResourceServer: Request with Access Token
-  ResourceServer -->>- Client: Deliver Protected Resource
-
-
-
+  
+  rect rgba(0, 128, 0, 0.1)
+    Note over Client, User: 🚀 Authorization Initiation Phase
+    Client ->>+ User: Redirect to /authorize<br/>(with code_challenge)
+    User ->>+ AuthServer: Enter credentials and consent
+    AuthServer -->>- User: Redirect back with auth code
+  end
+  
+  rect rgba(0, 0, 255, 0.1)
+    Note over Client, User: 🔄 Code Exchange Phase
+    User ->>+ Client: Return authorization code
+    
+    Client ->>+ AuthServer: POST /token<br/>(code + code_verifier)
+    AuthServer -->>- Client: Respond with ID & Access Tokens
+  end
+  
+  rect rgba(128, 0, 128, 0.1)
+    Note over Client, ResourceServer: 🔑 Resource Access Phase
+    Client ->>+ ResourceServer: Request with Access Token<br/>in Authorization header
+    ResourceServer -->>- Client: Deliver Protected Resource
+  end
 
 ```
 ---
