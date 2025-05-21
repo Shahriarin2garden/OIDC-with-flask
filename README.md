@@ -1,5 +1,67 @@
 # Flask OIDC Provider
 
+## 🔍 How OpenID Connect Works
+
+OpenID Connect (OIDC) is a simple identity layer on top of the OAuth 2.0 protocol that allows clients to verify the identity of users and obtain basic profile information in a secure and standardized manner. It provides a seamless way to handle single sign-on (SSO) and token-based authentication for web and mobile applications.
+
+### 📊 OIDC Authentication Workflow
+
+1. **Client Registration**: An application registers with the OIDC provider and receives a `client_id` and `client_secret`.
+
+2. **Authorization Request**: The user is redirected to the `/authorize` endpoint with a request that includes the `client_id`, scopes, redirect URI, and a code challenge (PKCE).
+
+3. **User Authentication**: The provider authenticates the user (e.g., via login form).
+
+4. **User Consent**: If required, the user consents to sharing requested information.
+
+5. **Authorization Code Issued**: The provider sends an authorization code to the client’s redirect URI.
+
+6. **Token Request**: The client sends the code and code verifier to the `/token` endpoint.
+
+7. **Token Response**: The provider returns an ID token (identity), access token (authorization), and optionally a refresh token.
+
+8. **UserInfo Retrieval**: The client can use the access token to fetch profile data from the `/userinfo` endpoint.
+
+9. **Token Introspection/Revocation**: Tokens can be validated or revoked using respective endpoints.
+
+OIDC enhances OAuth 2.0 by returning a cryptographically signed ID token that includes identity claims about the user, enabling secure and interoperable SSO experiences. The ID token, typically a JWT, asserts the user's identity and is consumed by client applications to establish authenticated sessions.
+
+```mermaid
+---
+config:
+  theme: redux-dark
+  sequence:
+    messageFontSize: 16
+    actorFontSize: 16
+    noteFontSize: 14
+    actorFontFamily: Arial, sans-serif
+    noteFontFamily: Arial, sans-serif
+    messageFontFamily: Arial, sans-serif
+  look: neo
+---
+sequenceDiagram
+  actor Client as Client
+  actor User as User
+  actor AuthServer as Authorization Server
+  actor ResourceServer as `Resource Server`
+  autonumber
+  Note over Client, User: User initiates authorization
+  Client ->> User: Redirect to /authorize<br/>(with code_challenge)
+  User ->> AuthServer: Enter credentials and consent
+  AuthServer -->> User: Redirect back with auth code
+  Note over User, Client: User is redirected back to client
+  User ->> Client: Authorization Code in URL
+  Note over Client, AuthServer: Client exchanges code for tokens
+  Client ->> AuthServer: POST /token
+  AuthServer -->> Client: Responds with ID & Access Tokens
+  Note over Client, ResourceServer: Client accesses protected resources
+  Client ->> ResourceServer: Request with Access Token
+  ResourceServer -->> Client: Deliver Protected Resource
+
+```
+
+This diagram illustrates a typical OIDC Authorization Code Flow with PKCE support, where identity assertions and access control are separated via the ID and access tokens respectively.
+
 **Flask OIDC Provider** is a modular and standards-compliant implementation of an OpenID Connect (OIDC) identity provider using Flask. This project supports secure identity flows and token-based authentication for modern web and API clients. It offers:
 
 * Authorization Code Flow with Proof Key for Code Exchange (PKCE)
