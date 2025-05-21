@@ -29,31 +29,52 @@ OIDC enhances OAuth 2.0 by adding an ID token, which is a JSON Web Token (JWT) t
 The ID token, structured as a signed JWT, contains identity claims such as user ID (`sub`), authentication timestamp, and issuer metadata. These tokens are signed using RS256, allowing relying parties to validate token integrity and confirm the issuer. This provides a robust and interoperable mechanism for cross-domain authentication.
 
 ```mermaid
+---
+config:
+  theme: redux-dark-color
+  sequence:
+    messageFontSize: 20
+    actorFontSize: 22
+    noteFontSize: 18
+    actorFontFamily: Arial, sans-serif
+    noteFontFamily: Arial, sans-serif
+    messageFontFamily: Arial, sans-serif
+    diagramMarginX: 50
+    diagramMarginY: 30
+    actorMargin: 80
+    width: 300
+    height: 60
+    boxMargin: 15
+    boxTextMargin: 10
+    noteMargin: 15
+    messageMargin: 50
+    messageFontWeight: bold
+    actorFontWeight: bold
+    noteFontWeight: bold
+  look: handDrawn
+---
 sequenceDiagram
-  participant Client as Client App
-  actor User as User
-  participant AuthServer as Authorization Server
-  participant ResourceServer as Resource Server
+  participant Client as 💻 Client App
+  actor User as 👤 User
+  participant AuthServer as 🔐 Authorization<br/>Server
+  participant ResourceServer as 🗄️ Resource<br/>Server
   autonumber
-
   rect rgba(0, 128, 0, 0.1)
-    Note over Client, User: Authorization Initiation Phase
-    Client->>+User: Redirect to /authorize (with code_challenge)
-    User->>+AuthServer: Enter credentials and consent
-    AuthServer-->>-User: Redirect back with auth code
+    Note over Client, User: 🚀 Authorization Initiation Phase
+    Client ->>+ User: Redirect to /authorize<br/>(with code_challenge)
+    User ->>+ AuthServer: Enter credentials and consent
+    AuthServer -->>- User: Redirect back with auth code
   end
-
   rect rgba(0, 0, 255, 0.1)
-    Note over Client, User: Code Exchange Phase
-    User->>+Client: Return authorization code
-    Client->>+AuthServer: POST /token (code + code_verifier)
-    AuthServer-->>-Client: Respond with ID & Access Tokens
+    Note over Client, User: 🔄 Code Exchange Phase
+    User ->>+ Client: Return authorization code
+    Client ->>+ AuthServer: POST /token<br/>(code + code_verifier)
+    AuthServer -->>- Client: Respond with ID & Access Tokens
   end
-
   rect rgba(128, 0, 128, 0.1)
-    Note over Client, ResourceServer: Resource Access Phase
-    Client->>+ResourceServer: Request with Access Token
-    ResourceServer-->>-Client: Deliver Protected Resource
+    Note over Client, ResourceServer: 🔑 Resource Access Phase
+    Client ->>+ ResourceServer: Request with Access Token<br/>in Authorization header
+    ResourceServer -->>- Client: Deliver Protected Resource
   end
 ```
 
