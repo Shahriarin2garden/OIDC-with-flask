@@ -1,0 +1,12 @@
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "use": "sig",
+      "kid": "flask-oidc-key-1",
+      "alg": "RS256",
+      "n": "tXUNm2L5vHvGKzO3Qz0V58A8dzV0KfnbqAwF1z-gN2FWeEovwbfk3U1ojwJ-qB-NfOJ3k_J1X6cp9Cil1ZCkpF52Jh2BNNV4PfMjN-zKfDjPbBa3P7akJvlH8VVaUGOwBu4AjF37Oic5mlC-jFQOc5AP89F0mU4uDddJ69gT5AbUw61XjR6KX2WW2sFIEZq9G6bdpKFV84OYqMNBZReEPqWvUOZlvZ1tM_3c6pq6M59QWdRtxZXvoHiONCoaEpbSja5NBLjIuUnhZMzxqZ9FkmZ4u6hchCNp4ZOP8GkLs3U28Ki7aJpJkU8Gkd3L9zHL5VTTFZb4jUvDZ1sszgZ0xw",
+      "e": "AQAB"
+    }
+  ]
+}

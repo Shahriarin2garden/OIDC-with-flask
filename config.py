@@ -2,37 +2,37 @@
 
 import os
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 class Config:
-    # WARNING: Change the secret key in production! Never use the default.
-    SECRET_KEY = os.environ.get("SECRET_KEY")
-    if not SECRET_KEY:
-        raise RuntimeError("SECRET_KEY environment variable is not set. This is required for production!")
+    SECRET_KEY = os.environ.get("SECRET_KEY", "change-me-in-production")
+    DEBUG = os.environ.get("FLASK_DEBUG", False)
 
-    PRIVATE_KEY_PATH = os.environ.get("PRIVATE_KEY_PATH", "./private.pem")
-    PUBLIC_KEY_PATH = os.environ.get("PUBLIC_KEY_PATH", "./public.pem")
-    ISSUER_URL = os.environ.get("ISSUER_URL", "http://localhost:5000")
-
-    # Token expiry times in seconds
-    TOKEN_EXPIRY = int(os.environ.get("TOKEN_EXPIRY", 3600))
-    REFRESH_TOKEN_EXPIRY = int(os.environ.get("REFRESH_TOKEN_EXPIRY", 86400))
+    # Key locations
+    PRIVATE_KEY_PATH = os.path.join(basedir, "private.pem")
+    PUBLIC_KEY_PATH = os.path.join(basedir, "public.pem")
+    JWKS_PATH = os.path.join(basedir, "jwks.json")
 
     @classmethod
     def load_private_key(cls):
         try:
-            with open(cls.PRIVATE_KEY_PATH, "r") as f:
+            with open(cls.PRIVATE_KEY_PATH, "rb") as f:
                 return f.read()
         except FileNotFoundError:
-            raise RuntimeError(f"Private key file not found at {cls.PRIVATE_KEY_PATH}")
-        except Exception as e:
-            raise RuntimeError(f"Error loading private key: {e}")
+            raise RuntimeError("Private key not found at expected path.")
 
     @classmethod
     def load_public_key(cls):
         try:
-            with open(cls.PUBLIC_KEY_PATH, "r") as f:
+            with open(cls.PUBLIC_KEY_PATH, "rb") as f:
                 return f.read()
         except FileNotFoundError:
-            raise RuntimeError(f"Public key file not found at {cls.PUBLIC_KEY_PATH}")
-        except Exception as e:
-            raise RuntimeError(f"Error loading public key: {e}")
-#     if not verify_pkce(code_verifier, record["code_challenge"], record["code_challenge_method"]):
+            raise RuntimeError("Public key not found at expected path.")
+
+    @classmethod
+    def load_jwks(cls):
+        try:
+            with open(cls.JWKS_PATH, "r") as f:
+                return f.read()
+        except FileNotFoundError:
+            raise RuntimeError("JWKS file not found at expected path.")
