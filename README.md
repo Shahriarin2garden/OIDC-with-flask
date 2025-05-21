@@ -145,7 +145,7 @@ flask-oidc-provider/
 ## 🛠️ Installation & Setup
 
 ```bash
-git clone https://github.com/your-org/flask-oidc-provider.git
+git clone https://github.com/Shahriarin2garden/oidc.git
 cd flask-oidc-provider
 python3 -m venv venv
 source venv/bin/activate
