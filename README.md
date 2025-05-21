@@ -29,7 +29,7 @@ The ID token, formatted as a signed JSON Web Token (JWT), encapsulates identity 
 ```mermaid
 ---
 config:
-  theme: redux-dark
+  theme: redux-dark-color
   sequence:
     messageFontSize: 16
     actorFontSize: 16
@@ -37,7 +37,7 @@ config:
     actorFontFamily: Arial, sans-serif
     noteFontFamily: Arial, sans-serif
     messageFontFamily: Arial, sans-serif
-  look: neo
+  look: handDrawn
 ---
 sequenceDiagram
   actor Client as Client
@@ -57,8 +57,6 @@ sequenceDiagram
   Note over Client, ResourceServer: Client accesses protected resources
   Client ->>+ ResourceServer: Request with Access Token
   ResourceServer -->>- Client: Deliver Protected Resource
-
-```
 
 ---
 
