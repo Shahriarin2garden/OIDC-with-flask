@@ -58,6 +58,10 @@ sequenceDiagram
   Client ->>+ ResourceServer: Request with Access Token
   ResourceServer -->>- Client: Deliver Protected Resource
 
+
+
+
+```
 ---
 
 ## 🧭 Project Overview
