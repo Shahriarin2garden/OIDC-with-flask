@@ -1,43 +1,78 @@
 # Flask OIDC Provider
 
-## 🔍 How OpenID Connect Works
+## 🔍 Understanding OpenID Connect (OIDC)
 
-OpenID Connect (OIDC) is a simple identity layer on top of the OAuth 2.0 protocol that allows clients to verify the identity of users and obtain basic profile information in a secure and standardized manner. It provides a seamless way to handle single sign-on (SSO) and token-based authentication for web and mobile applications.
+OpenID Connect (OIDC) is an identity layer built on top of the OAuth 2.0 protocol that enables client applications to verify the identity of end-users based on authentication performed by an authorization server. It also provides mechanisms to obtain basic user profile information in an interoperable and secure manner. OIDC is widely used for implementing Single Sign-On (SSO) and for securing modern web and mobile applications.
 
-### 📊 OIDC Authentication Workflow
+### 📊 OIDC Authorization Code Flow with PKCE
 
-1. **Client Registration**: An application registers with the OIDC provider and receives a `client_id` and `client_secret`.
+1. **Client Registration**: The client registers with the OIDC provider and receives a `client_id` and `client_secret`.
 
-2. **Authorization Request**: The user is redirected to the `/authorize` endpoint with a request that includes the `client_id`, scopes, redirect URI, and a code challenge (PKCE).
+2. **Authorization Request**: The client redirects the user to the `/authorize` endpoint, providing `client_id`, `redirect_uri`, `scope`, `state`, and a PKCE `code_challenge`.
 
-3. **User Authentication**: The provider authenticates the user (e.g., via login form).
+3. **User Authentication**: The user is prompted to log in with credentials at the provider.
 
-4. **User Consent**: If required, the user consents to sharing requested information.
+4. **User Consent**: Upon successful login, the user grants the application access to the requested scopes.
 
-5. **Authorization Code Issued**: The provider sends an authorization code to the client’s redirect URI.
+5. **Authorization Code Issuance**: The provider sends an authorization code to the client's redirect URI.
 
-6. **Token Request**: The client sends the code and code verifier to the `/token` endpoint.
+6. **Token Request**: The client exchanges the authorization code and PKCE `code_verifier` at the `/token` endpoint.
 
-7. **Token Response**: The provider returns an ID token (identity), access token (authorization), and optionally a refresh token.
+7. **Token Response**: The provider issues an ID token (identity), an access token (authorization), and optionally a refresh token.
 
-8. **UserInfo Retrieval**: The client can use the access token to fetch profile data from the `/userinfo` endpoint.
+8. **UserInfo Access**: The client can use the access token to call the `/userinfo` endpoint for user profile data.
 
-9. **Token Introspection/Revocation**: Tokens can be validated or revoked using respective endpoints.
+9. **Token Introspection or Revocation**: The client may validate or revoke tokens via dedicated endpoints.
 
-OIDC enhances OAuth 2.0 by returning a cryptographically signed ID token that includes identity claims about the user, enabling secure and interoperable SSO experiences. The ID token, typically a JWT, asserts the user's identity and is consumed by client applications to establish authenticated sessions.
+The ID token, formatted as a signed JSON Web Token (JWT), encapsulates identity claims about the authenticated user. These claims include information such as the user's unique identifier, authentication time, and issuer details. By being digitally signed, the ID token ensures both the integrity and authenticity of the identity assertion, enabling secure and interoperable authentication across clients and domains.
 
-![oidc Architecture](assets/oidc.svg)
+```mermaid
+---
+config:
+  theme: redux-dark
+  sequence:
+    messageFontSize: 16
+    actorFontSize: 16
+    noteFontSize: 14
+    actorFontFamily: Arial, sans-serif
+    noteFontFamily: Arial, sans-serif
+    messageFontFamily: Arial, sans-serif
+  look: neo
+---
+sequenceDiagram
+  actor Client as Client
+  actor User as User
+  actor AuthServer as Authorization Server
+  actor ResourceServer as `Resource Server`
+  autonumber
+  Note over Client, User: User initiates authorization
+  Client ->>+ User: Redirect to /authorize<br/>(with code_challenge)
+  User ->>+ AuthServer: Enter credentials and consent
+  AuthServer -->>- User: Redirect back with auth code
+  Note over User, Client: User is redirected back to client
+  User ->>+ Client: Authorization Code in URL
+  Note over Client, AuthServer: Client exchanges code for tokens
+  Client ->>+ AuthServer:    POST /token
+  AuthServer -->>- Client: Responds with ID & Access Tokens
+  Note over Client, ResourceServer: Client accesses protected resources
+  Client ->>+ ResourceServer: Request with Access Token
+  ResourceServer -->>- Client: Deliver Protected Resource
 
+```
 
-This diagram illustrates a typical OIDC Authorization Code Flow with PKCE support, where identity assertions and access control are separated via the ID and access tokens respectively.
+---
 
-**Flask OIDC Provider** is a modular and standards-compliant implementation of an OpenID Connect (OIDC) identity provider using Flask. This project supports secure identity flows and token-based authentication for modern web and API clients. It offers:
+## 🧭 Project Overview
 
-* Authorization Code Flow with Proof Key for Code Exchange (PKCE)
-* Refresh token issuance and lifecycle management
-* Dynamic client registration capabilities
-* Standards-aligned token revocation and introspection endpoints
-* UserInfo and JWKS endpoints conforming to OIDC specifications
+**Flask OIDC Provider** is a modular and standards-compliant implementation of an OpenID Connect (OIDC) identity provider built using Flask. Designed to support secure authentication flows and token-based access for both web and API clients, this project includes:
+
+* Full OIDC Authorization Code Flow with PKCE
+* Refresh tokens and token lifecycle management
+* Dynamic client registration
+* Standards-compliant token revocation and introspection
+* JWKS, UserInfo, and discovery endpoints
+
+This provider is ideal for developers building OAuth 2.0/OIDC-integrated systems or needing a customizable, lightweight identity provider for internal services or development.
 
 ---
 
@@ -75,59 +110,26 @@ flask-oidc-provider/
 
 ## 🚀 Core Capabilities
 
-* 🔐 **OIDC Authorization Code Flow** with PKCE
-* 🔄 **Refresh Token Support** for long-lived sessions
-* 🔍 **Token Introspection & Revocation** for secure access control
-* 📘 **OIDC Discovery Metadata** endpoint
-* 👤 **UserInfo Endpoint** with customizable claims
-* 🛡️ **JWT-based Token Architecture** (RS256 signed)
-* 🧠 **Pluggable In-Memory Store**, Redis-ready backend
+* 🔐 **Authorization Code Flow with PKCE**
+* 🔄 **Refresh Token Support**
+* 🔍 **Token Introspection & Revocation**
+* 📘 **OIDC Discovery & Metadata**
+* 👤 **UserInfo Endpoint with Custom Claims**
+* 🛡️ **JWT-based Architecture with RS256**
+* 🧠 **In-Memory Store**, Redis backend compatible
 
 ---
 
 ## ➕ Extended Features
 
 1. **Dynamic Client Registration**
-
-   * Client metadata validation and compliance checks
-   * Enforces redirect URI and grant type rules
-
-2. **Scopes and Claims Management**
-
-   * Support for standard OIDC scopes: `profile`, `email`, `groups`
-   * Configurable token claim augmentation
-
-3. **Comprehensive Token Lifecycle**
-
-   * Revocation endpoint for client-triggered invalidation
-   * Introspection endpoint for downstream services
-
-4. **Security Enhancements**
-
-   * TLS and HSTS support
-   * Rate limiting and brute-force protection
-   * CSRF tokens on user-facing forms
-
-5. **Monitoring and Metrics**
-
-   * Prometheus-compatible metrics output
-   * JSON-structured logs with trace IDs
-
-6. **Developer Tooling**
-
-   * Full OpenAPI 3.0 schema
-   * Postman and Insomnia client configs
-   * Dockerized development environment
-
-7. **Testing and Automation**
-
-   * Pytest-based suite with high coverage
-   * CI/CD pipeline with linting, testing, Docker build
-
-8. **Reference Clients**
-
-   * Example Single Page Application (SPA) and CLI clients
-   * Multilingual implementation samples (Python, Go, Node.js)
+2. **OIDC Scopes and Claims Management**
+3. **Comprehensive Token Lifecycle Operations**
+4. **Security Best Practices (TLS, CSRF, HSTS)**
+5. **Monitoring via Prometheus & Structured Logs**
+6. **OpenAPI Schema & Development Tooling**
+7. **High Test Coverage via Pytest & CI/CD**
+8. **Example Client Implementations (SPA, CLI)**
 
 ---
 
@@ -141,18 +143,16 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 🔐 Environment Variables
-
-Define the following to configure runtime behavior:
+### 🔐 Environment Configuration
 
 ```ini
-FLASK_ENV=production                 # Runtime environment
-SECRET_KEY=super-secret-key         # Flask session secret
-PRIVATE_KEY_PATH=./private.pem      # Path to private signing key
-PUBLIC_KEY_PATH=./public.pem        # Path to public verification key
-ISSUER_URL=https://auth.example.com # OIDC issuer identifier
-TOKEN_EXPIRY=3600                   # Access token expiration (in seconds)
-REFRESH_TOKEN_EXPIRY=86400          # Refresh token expiration (in seconds)
+FLASK_ENV=production
+SECRET_KEY=super-secret-key
+PRIVATE_KEY_PATH=./private.pem
+PUBLIC_KEY_PATH=./public.pem
+ISSUER_URL=https://auth.example.com
+TOKEN_EXPIRY=3600
+REFRESH_TOKEN_EXPIRY=86400
 ```
 
 ---
@@ -164,30 +164,32 @@ export FLASK_ENV=development
 flask run --host=0.0.0.0 --port=5000
 ```
 
-Override defaults using a `.env`file or environment variables.
+Override configuration using a `.env` file or direct environment variables.
 
 ---
 
 ## 🔗 API Endpoint Overview
 
-| Method | Path                                | Description                                         |
-| ------ | ----------------------------------- | --------------------------------------------------- |
-| POST   | `/register`                         | Register a new client dynamically                   |
-| GET    | `/.well-known/openid-configuration` | Retrieve OIDC metadata                              |
-| GET    | `/jwks`                             | JSON Web Key Set exposure                           |
-| GET    | `/authorize`                        | Authorization request UI (PKCE flow)                |
-| POST   | `/authorize`                        | Authenticate and prepare user consent               |
-| POST   | `/consent`                          | Grant authorization code after consent              |
-| POST   | `/token`                            | Exchange code or refresh token for access/ID tokens |
-| POST   | `/revoke`                           | Revoke active tokens                                |
-| POST   | `/introspect`                       | Validate and decode access/refresh tokens           |
-| GET    | `/userinfo`                         | Return user claims (access token required)          |
+| Method | Path                                | Description                                      |
+| ------ | ----------------------------------- | ------------------------------------------------ |
+| POST   | `/register`                         | Register a new OIDC client dynamically           |
+| GET    | `/.well-known/openid-configuration` | OIDC discovery document                          |
+| GET    | `/jwks`                             | Exposes provider public keys (JWKS)              |
+| GET    | `/authorize`                        | Initiate user login & authorization              |
+| POST   | `/authorize`                        | Process user login and redirect                  |
+| POST   | `/consent`                          | Finalize authorization after user consent        |
+| POST   | `/token`                            | Exchange code/refresh token for access/ID tokens |
+| POST   | `/revoke`                           | Revoke active tokens (access/refresh)            |
+| POST   | `/introspect`                       | Token validation and metadata retrieval          |
+| GET    | `/userinfo`                         | Returns identity claims based on access token    |
 
 ---
 
 ## 📡 REST API Usage Examples
 
-### 🔧 Client Registration
+Includes both `curl` and Python `requests` snippets for quick integration testing.
+
+### 🔧 Dynamic Client Registration
 
 ```bash
 curl -X POST https://auth.example.com/register \
@@ -201,100 +203,65 @@ curl -X POST https://auth.example.com/register \
 }'
 ```
 
-### 🔑 Authorization Code Flow (with PKCE)
+### 🔑 Auth Code Flow (with PKCE)
 
-**Step 1: Generate verifier & challenge**
+**Step 1: Generate code verifier and challenge**
 
 ```bash
 code_verifier=$(openssl rand -base64 32 | tr -d '=+/')
 code_challenge=$(echo -n "$code_verifier" | openssl dgst -sha256 -binary | openssl base64 | tr -d '=+/')
 ```
 
-**Step 2: Redirect to authorize endpoint**
+**Step 2: Redirect User to Authorize Endpoint**
 
 ```text
-GET https://auth.example.com/authorize?
-  response_type=code
- &client_id=CLIENT_ID
- &redirect_uri=https://app.example.com/callback
- &scope=openid profile email
- &code_challenge=$code_challenge
- &code_challenge_method=S256
- &state=XYZ
+GET https://auth.example.com/authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=https://app.example.com/callback&scope=openid profile email&code_challenge=$code_challenge&code_challenge_method=S256&state=XYZ
 ```
 
-**Step 3: Exchange code for token**
+**Step 3: Exchange Code for Tokens**
 
 ```bash
 curl -X POST https://auth.example.com/token \
   -H 'Content-Type: application/x-www-form-urlencoded' \
-  -d 'grant_type=authorization_code&
-client_id=CLIENT_ID&
-code=$AUTH_CODE&
-redirect_uri=https://app.example.com/callback&
-code_verifier=$code_verifier'
+  -d 'grant_type=authorization_code&client_id=CLIENT_ID&code=$AUTH_CODE&redirect_uri=https://app.example.com/callback&code_verifier=$code_verifier'
 ```
 
-### 🔄 Refresh Token Exchange
+**Python Example**
 
-```bash
-curl -X POST https://auth.example.com/token \
-  -H 'Content-Type: application/x-www-form-urlencoded' \
-  -d 'grant_type=refresh_token&
-refresh_token=REFRESH_TOKEN&
-client_id=CLIENT_ID'
-```
-
-### 🔍 Token Introspection
-
-```bash
-curl -X POST https://auth.example.com/introspect \
-  -H 'Content-Type: application/x-www-form-urlencoded' \
-  -d 'token=ACCESS_TOKEN'
-```
-
-### 👤 User Info Retrieval
-
-```bash
-curl -H 'Authorization: Bearer ACCESS_TOKEN' \
-  https://auth.example.com/userinfo
+```python
+import requests
+response = requests.post('https://auth.example.com/token', data={
+    'grant_type': 'authorization_code',
+    'client_id': 'CLIENT_ID',
+    'code': 'AUTH_CODE',
+    'redirect_uri': 'https://app.example.com/callback',
+    'code_verifier': 'CODE_VERIFIER'
+})
+print(response.json())
 ```
 
 ---
 
 ## 🐳 Docker Deployment
 
-Launch the stack using Docker Compose:
-
 ```bash
 docker-compose up --build
 ```
 
-Configuration can be customized via `.env`or Docker environment overrides.
+Configure `.env` for runtime environment overrides such as port, issuer, or token TTLs.
 
 ---
 
-## 📦 Deployment
+## 📦 Production Deployment
 
-### 🐘 Gunicorn with Nginx (Production)
-
-1. Install Gunicorn:
+### Gunicorn + Nginx
 
 ```bash
 pip install gunicorn
-```
-
-2. Start the app:
-
-```bash
 gunicorn -w 4 -b 0.0.0.0:5000 app:app
 ```
 
-3. Set up Nginx as a reverse proxy and enable HTTPS with Let's Encrypt.
-
-### 🖥️ Systemd Unit (Linux Service)
-
-Create`/etc/systemd/system/flask-oidc.service`:
+### Systemd Service
 
 ```ini
 [Unit]
@@ -311,8 +278,6 @@ Restart=always
 WantedBy=multi-user.target
 ```
 
-Enable and start the service:
-
 ```bash
 sudo systemctl enable flask-oidc
 sudo systemctl start flask-oidc
@@ -322,21 +287,21 @@ sudo systemctl start flask-oidc
 
 ## 🤝 Contributing
 
-We welcome your contributions.
+We welcome all contributions:
 
-1. Fork this repository
-2. Create a new branch:`git checkout -b feature/awesome-feature`
-3. Implement changes with proper tests and documentation
-4. Submit a pull request
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Write clean, tested code and documentation
+4. Open a pull request
 
-See the [Contributor Guide](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) for collaboration guidelines. Visit our [GitHub Issues](https://github.com/your-org/flask-oidc-provider/issues) page to explore current opportunities.
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE\_OF\_CONDUCT.md](CODE_OF_CONDUCT.md). Visit [GitHub Issues](https://github.com/your-org/flask-oidc-provider/issues) to discover open tasks.
 
 ---
 
 ## 📄 License
 
-Licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-*Thank you for your interest and support. Contributions are always appreciated.*
+*Thank you for your interest and support.*
