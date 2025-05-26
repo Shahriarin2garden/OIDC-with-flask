@@ -571,4 +571,4 @@ Congratulations! You have successfully:
 
 With these skills, you can confidently integrate standards-compliant authentication into your web applications, ensuring both security and interoperability.
 
-*End of Documentation — clear, consistent, and educational.*
+*End of Documentation*
