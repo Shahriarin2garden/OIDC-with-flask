@@ -546,7 +546,7 @@ Below are the detailed JSON responses for each endpoint shown above:
 Below is a high-level overview of the data and control flow:
 
 
-   ![Architecture Diagram](https://github.com/Shahriarin2garden/OIDC-with-flask/blob/4c3137d410b40be8bc3e457cf9349c98584d48d4/assets/go.svg)
+   ![Architecture Diagram](https://github.com/Shahriarin2garden/OIDC-with-flask/blob/a1c17107d703138ada697dfe8843672432647138/assets/architecture.png)
 
 Each arrow represents an HTTP interaction secured via TLS.
 
