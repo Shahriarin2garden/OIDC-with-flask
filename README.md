@@ -150,11 +150,7 @@ flask-oidc-provider/
 └── README.md                 # Project documentation (this file)
 ```
 
-**Expected Deliverables:**
 
-* **Draw\.io diagrams** placed in `/docs/*.svg` illustrating data flows.
-* **Annotated screenshots** under `/docs/screenshots/` highlighting key UI interactions.
-* **Automated test suite** in `tests/` with coverage reports in `/reports`.
 
 ---
 
