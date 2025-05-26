@@ -163,7 +163,7 @@ Follow these detailed instructions to set up, configure, and run your OIDC Provi
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your-org/flask-oidc-provider.git
+   git clone https://github.com/Shahriarin2garden/OIDC-with-flask
    cd flask-oidc-provider
    ```
 2. **Create and activate a virtual environment**:
