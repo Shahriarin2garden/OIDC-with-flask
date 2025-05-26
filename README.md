@@ -3,7 +3,6 @@
 **A Robust, Standards‑Compliant OpenID Connect (OIDC) Provider Built with Flask**
 
 ---
-![OIDC Architecture](assets/Untitled Diagram (1).svg)
 
 ## 📑 Table of Contents
 
@@ -106,15 +105,12 @@ In this lab, your goal is to implement a production-ready OIDC Provider with the
 
 1. **OIDC Sequence Diagram** (SVG)
 
-   ```markdown
-   ![OIDC Sequence Diagram](UntitledDiagram(1).svg)
-   ```
+   
+   ![OIDC Architecture](https://github.com/Shahriarin2garden/OIDC-with-flask/blob/3b9fb406b70719c2900bf7e4ff9298e7420fa2fb/assets/UntitledDiagram(1).svg)
 
-2. **System Architecture Diagram** (SVG)
 
-   ```markdown
-   ![Architecture Diagram](docs/diagrams/architecture.svg)
-   ```
+
+
 
 ---
 
