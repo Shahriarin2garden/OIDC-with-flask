@@ -545,23 +545,8 @@ Below are the detailed JSON responses for each endpoint shown above:
 
 Below is a high-level overview of the data and control flow:
 
-```
-+-------------------+      +---------------------+
-|    OIDC Client    | ---> | /authorize Endpoint |
-+-------------------+      +---------------------+
-        |                           |
-        v                           v
-   [Login UI]                [Consent Page]
-        |                           |
-        v                           v
-+-------------------+      +---------------------+
-| Authorization Code| ---> | /token Endpoint     |
-+-------------------+      +---------------------+
-        |                           |
-        v                           v
- Access + ID + Refresh         /userinfo Endpoint
-       Tokens
-```
+
+   ![Architecture Diagram](https://github.com/Shahriarin2garden/OIDC-with-flask/blob/4c3137d410b40be8bc3e457cf9349c98584d48d4/assets/go.svg)
 
 Each arrow represents an HTTP interaction secured via TLS.
 
@@ -569,16 +554,10 @@ Each arrow represents an HTTP interaction secured via TLS.
 
 1. **OIDC Sequence Diagram** (SVG)
 
-   ```markdown
-   ![OIDC Sequence Diagram](docs/diagrams/oidc-sequence.svg)
-   ```
 
 2. **System Architecture Diagram** (SVG)
 
-   ```markdown
-   ![Architecture Diagram](docs/diagrams/architecture.svg)
-   ```
-
+   
 ---
 
 ## 🎉 5. Conclusion
