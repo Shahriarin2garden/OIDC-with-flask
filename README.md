@@ -79,6 +79,7 @@ sequenceDiagram
 ```
 
 ---
+![OIDC Architecture](assets/Untitled Diagram (1).svg)
 
 ## 🧭 Project Overview
 
