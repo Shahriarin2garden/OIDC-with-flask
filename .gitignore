@@ -1,0 +1,65 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+ENV/
+env/
+
+# Environment variable files
+.env
+.env.*
+
+# Flask instance folder (if used)
+instance/
+
+# SQLite database files
+*.db
+*.sqlite3
+
+# Pytest cache
+.pytest_cache/
+*.cache
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
+
+# MyPy cache
+.mypy_cache/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Docker overrides
+docker-compose.override.yml
+
+# IDE/editor configs
+.vscode/
+.idea/
+*.iml
+
+# macOS files
+.DS_Store
+
+# Logs and temp files
+*.log
+*.bak
+*.pid
+
+# Swap files
+*.swp
+
+# Secret keys and certificates
+private.pem
+*.key
+*.crt
+secrets.json
+
+# Jupyter notebooks
+.ipynb_checkpoints/
