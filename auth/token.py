@@ -1,10 +1,52 @@
 # flask-oidc-provider/auth/token.py
 
 import jwt
-import datetime
+from datetime import datetime, timedelta
+from typing import Dict, Optional
 from flask import current_app
 from cryptography.hazmat.primitives import serialization
 from config import Config
+
+def create_jwt(
+    payload: Dict,
+    private_key: str,
+    algorithm: str = 'RS256',
+    expiry_hours: int = 1
+) -> str:
+    """
+    Create a signed JWT token.
+    Args:
+        payload: Dict containing claims
+        private_key: RSA private key for signing
+        algorithm: Signing algorithm (default: RS256)
+        expiry_hours: Token expiry in hours (default: 1)
+    """
+    now = datetime.utcnow()
+    payload.update({
+        'iat': now,
+        'exp': now + timedelta(hours=expiry_hours),
+        'iss': 'http://localhost:5000'  # Match your ISSUER_URL
+    })
+    return jwt.encode(payload, private_key, algorithm=algorithm)
+
+def validate_token(
+    token: str,
+    public_key: str,
+    algorithm: str = 'RS256'
+) -> Optional[Dict]:
+    """
+    Validate and decode a JWT token.
+    Returns decoded payload if valid, None if invalid.
+    """
+    try:
+        return jwt.decode(
+            token,
+            public_key,
+            algorithms=[algorithm],
+            issuer='http://localhost:5000'  # Match your ISSUER_URL
+        )
+    except jwt.InvalidTokenError:
+        return None
 
 class TokenService:
     @staticmethod

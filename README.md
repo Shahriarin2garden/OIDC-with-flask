@@ -192,7 +192,7 @@ Follow these detailed instructions to set up, configure, and run your OIDC Provi
    FLASK_ENV=development         # Switch to production in live environments
    ISSUER_URL=http://localhost:5000
    SECRET_KEY=<your-secret>      # Used for session management and CSRF
-   PRIVATE_KEY_PATH=keys/private.pem
+     from auth import authenticate_client, create_jwt, validate_token, register_clients/private.pem
    PUBLIC_KEY_PATH=keys/public.pem
    REDIS_URL=redis://localhost:6379/0  # Optional: remove for in-memory mode
    ```
