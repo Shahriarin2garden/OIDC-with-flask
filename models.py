@@ -11,9 +11,11 @@ import time
 clients = {
     "client123": {
         "client_id": "client123",
+        "client_secret": "secret123",
         "redirect_uris": ["http://localhost:8080/callback"],
-        "scope": "openid profile email",
-        "client_secret": "secret123"  # if applicable
+        "grant_types": ["authorization_code", "refresh_token"],
+        "response_types": ["code"],
+        "scope": "openid profile email"
     }
 }
 

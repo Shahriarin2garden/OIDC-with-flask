@@ -12,7 +12,7 @@
         <h2>Authorize Application</h2>
         <p>Application <strong>{{ client_id }}</strong> is requesting access to:</p>
         <ul class="scope-list">
-            {% for scope_item in scope.split(' ') %}
+            {% for scope_item in scopes %}
             <li>{{ scope_item }}</li>
             {% endfor %}
         </ul>

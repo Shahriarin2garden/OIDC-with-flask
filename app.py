@@ -82,7 +82,6 @@ def authorize():
         response_type = request.args.get("response_type")
         
         print(f"Request params: client_id={client_id}, redirect_uri={redirect_uri}, response_type={response_type}")
-        print(f"Available clients: {clients}")
         
         # Basic validation
         if not client_id or not redirect_uri or not response_type:
@@ -128,38 +127,66 @@ def authorize():
         return render_template("login.html")
 
     # Handle POST (login)
-    username = request.form.get("username")
-    password = request.form.get("password")
-    user = users.get(username)
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        print(f"Login attempt for user: {username}")
+        
+        user = users.get(username)
+        print(f"Found user: {user}")
 
-    if not user or user['password'] != password:  # In production, use proper password hashing
-        return create_error_response("invalid_credentials", "Invalid username or password", 401)
+        if not user or user['password'] != password:  # In production, use proper password hashing
+            print("Invalid credentials")
+            return create_error_response("invalid_credentials", "Invalid username or password", 401)
 
-    session['user'] = username
-    return render_template(
-        "consent.html", 
-        client_id=session['client_id'], 
-        scope=session['scope']
-    )
+        session['user'] = username
+        print(f"User {username} authenticated successfully")
+          # Get the scope string and split it into a list
+        scope_string = session.get('scope', 'openid')
+        scopes = [s.strip() for s in scope_string.split() if s.strip()]
+        print(f"Rendering consent page with scopes: {scopes}")
+        return render_template(
+            "consent.html", 
+            client_id=session.get('client_id'),
+            scopes=scopes
+        )
 
 @app.route("/consent", methods=["POST"])
 def consent():
     """Handle user consent"""
     if "user" not in session:
+        print("No active session found")
         return create_error_response("unauthorized", "No active session", 401)
+
+    # Check if user denied access
+    if request.form.get("action") == "deny":
+        redirect_uri = (
+            f"{session['redirect_uri']}?"
+            f"error=access_denied&"
+            f"error_description=User denied access&"
+            f"state={session.get('state', '')}"
+        )
+        return redirect(redirect_uri)
 
     # Generate authorization code
     code = str(uuid.uuid4())
+    
+    # Ensure scope is properly formatted
+    scope_string = session.get('scope', 'openid')
+    scopes = ' '.join(s.strip() for s in scope_string.split() if s.strip())
+    
     authorization_codes[code] = {
         "client_id": session['client_id'],
         "user": session['user'],
-        "code_challenge": session['code_challenge'],
-        "code_challenge_method": session['code_challenge_method'],
-        "scope": session['scope'],
-        "created_at": datetime.now(timezone.utc)  # Use timezone-aware datetime
+        "code_challenge": session.get('code_challenge'),
+        "code_challenge_method": session.get('code_challenge_method', 'S256'),
+        "scope": scopes,
+        "created_at": datetime.now(timezone.utc)
     }
 
-    # Redirect back to client
+    print(f"Generated authorization code for user {session['user']} with scopes: {scopes}")
+
+    # Redirect back to client with the code
     redirect_uri = (
         f"{session['redirect_uri']}?"
         f"code={code}&"
