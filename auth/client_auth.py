@@ -1,15 +1,5 @@
 from typing import Optional, Dict
-
-# Simple in-memory client storage
-clients: Dict[str, Dict] = {
-    "default_client": {
-        "client_secret": "default_secret",
-        "redirect_uris": ["http://localhost:8000/callback"],
-        "grant_types": ["authorization_code"],
-        "response_types": ["code"],
-        "scope": "openid profile email"
-    }
-}
+from models import clients  # Import clients from models
 
 def authenticate_client(client_id: str, client_secret: str) -> bool:
     """

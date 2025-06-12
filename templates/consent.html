@@ -3,14 +3,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Consent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h2>Authorize Application</h2>
-    <p>Application <strong>{{ client_id }}</strong> is requesting access to the following scopes:</p>
-    <p>{{ scope }}</p>
-    <form method="POST">
-        <button type="submit">Authorize</button>
-    </form>
+    <div class="container">
+        <h2>Authorize Application</h2>
+        <p>Application <strong>{{ client_id }}</strong> is requesting access to:</p>
+        <ul class="scope-list">
+            {% for scope_item in scope.split(' ') %}
+            <li>{{ scope_item }}</li>
+            {% endfor %}
+        </ul>
+        <form method="POST">
+            <button type="submit" name="action" value="approve">Authorize</button>
+            <button type="submit" name="action" value="deny" class="secondary">Deny</button>
+        </form>
+    </div>
 </body>
 </html>

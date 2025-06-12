@@ -1,7 +1,7 @@
 # flask-oidc-provider/auth/token.py
 
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from typing import Dict, Optional
 from flask import current_app
 from cryptography.hazmat.primitives import serialization
@@ -21,7 +21,7 @@ def create_jwt(
         algorithm: Signing algorithm (default: RS256)
         expiry_hours: Token expiry in hours (default: 1)
     """
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     payload.update({
         'iat': now,
         'exp': now + timedelta(hours=expiry_hours),
@@ -51,13 +51,13 @@ def validate_token(
 class TokenService:
     @staticmethod
     def generate_id_token(sub, aud, nonce=None):
-        now = datetime.datetime.utcnow()
+        now = datetime.now(timezone.utc)
         payload = {
             "iss": "http://localhost:5000",
             "sub": sub,
             "aud": aud,
             "iat": now,
-            "exp": now + datetime.timedelta(minutes=10),
+            "exp": now + timedelta(minutes=10),
             "auth_time": now,
         }
         if nonce:

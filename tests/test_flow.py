@@ -10,6 +10,7 @@ def test_authorization_flow(client):
         query_string={
             "client_id": "client123",
             "redirect_uri": clients["client123"]["redirect_uris"][0],
+            "response_type": "code",  # Add required response_type
             "state": "abc",
             "scope": "openid",
             "code_challenge": "testchallenge",
@@ -42,4 +43,3 @@ def client():
     app.config["TESTING"] = True
     with app.test_client() as client:
         yield client
-    

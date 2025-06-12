@@ -1,17 +1,18 @@
 # flask-oidc-provider/app.py
 
 from flask import Flask, redirect, request, render_template, session, jsonify
+from datetime import datetime, timezone
+from typing import Tuple, Dict, Any, Optional
+import uuid
 from auth.token import TokenService
 from auth.pkce import verify_code_challenge
 from auth.client_auth import authenticate_client, get_client_config
 from models import clients, authorization_codes, tokens, users, cleanup_expired_tokens
 from config import Config
-import uuid
-from datetime import datetime
-from typing import Tuple, Dict, Any, Optional
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.secret_key = app.config['SECRET_KEY']  # Required for session management
 
 def create_error_response(error: str, description: str, status: int = 400) -> Tuple[Dict, int]:
     """Create standardized error response"""
@@ -19,6 +20,31 @@ def create_error_response(error: str, description: str, status: int = 400) -> Tu
         "error": error,
         "error_description": description
     }), status
+
+def authenticate_client() -> Tuple[Dict[str, Any], Optional[Tuple[Dict, int]]]:
+    """Authenticate client using Basic auth or request body"""
+    auth = request.authorization
+    if auth:
+        client_id = auth.username
+        client_secret = auth.password
+    else:
+        client_id = request.form.get("client_id")
+        client_secret = request.form.get("client_secret")
+
+    if not client_id or not client_secret:
+        return None, create_error_response(
+            "invalid_client",
+            "Missing client credentials"
+        )
+
+    client = get_client_config(client_id)
+    if not client or not authenticate_client(client_id, client_secret):
+        return None, create_error_response(
+            "invalid_client",
+            "Invalid client credentials"
+        )
+
+    return client, None
 
 @app.route("/")
 def index():
@@ -52,21 +78,53 @@ def authorize():
     if request.method == "GET":
         client_id = request.args.get("client_id")
         redirect_uri = request.args.get("redirect_uri")
+        scope = request.args.get("scope", "openid")
+        response_type = request.args.get("response_type")
         
+        print(f"Request params: client_id={client_id}, redirect_uri={redirect_uri}, response_type={response_type}")
+        print(f"Available clients: {clients}")
+        
+        # Basic validation
+        if not client_id or not redirect_uri or not response_type:
+            return create_error_response(
+                "invalid_request",
+                "Missing required parameters"
+            )
+            
         # Validate client and redirect URI
         client = get_client_config(client_id)
-        if not client or redirect_uri not in client.get("redirect_uris", []):
-            return create_error_response("invalid_client", "Invalid client or redirect URI")
+        print(f"Found client: {client}")
+        
+        if not client:
+            return create_error_response(
+                "invalid_client",
+                "Unknown client"
+            )
+            
+        if redirect_uri not in client.get("redirect_uris", []):
+            return create_error_response(
+                "invalid_request",
+                "Invalid redirect URI"
+            )
 
-        # Store authorization request parameters
+        # Validate response type
+        if response_type != "code":
+            return create_error_response(
+                "unsupported_response_type",
+                "Only 'code' response type is supported"
+            )
+
+        # Store request parameters in session
         session.update({
             'client_id': client_id,
             'redirect_uri': redirect_uri,
             'state': request.args.get("state"),
-            'scope': request.args.get("scope", "openid"),
+            'scope': scope,
             'code_challenge': request.args.get("code_challenge"),
-            'code_challenge_method': request.args.get("code_challenge_method", "S256")
+            'code_challenge_method': request.args.get("code_challenge_method", "S256"),
+            'nonce': request.args.get("nonce")
         })
+        
         return render_template("login.html")
 
     # Handle POST (login)
@@ -98,7 +156,7 @@ def consent():
         "code_challenge": session['code_challenge'],
         "code_challenge_method": session['code_challenge_method'],
         "scope": session['scope'],
-        "created_at": datetime.utcnow()
+        "created_at": datetime.now(timezone.utc)  # Use timezone-aware datetime
     }
 
     # Redirect back to client
