@@ -3,10 +3,10 @@
     {
       "kty": "RSA",
       "use": "sig",
-      "kid": "flask-oidc-key-1",
-      "alg": "RS256",
-      "n": "tXUNm2L5vHvGKzO3Qz0V58A8dzV0KfnbqAwF1z-gN2FWeEovwbfk3U1ojwJ-qB-NfOJ3k_J1X6cp9Cil1ZCkpF52Jh2BNNV4PfMjN-zKfDjPbBa3P7akJvlH8VVaUGOwBu4AjF37Oic5mlC-jFQOc5AP89F0mU4uDddJ69gT5AbUw61XjR6KX2WW2sFIEZq9G6bdpKFV84OYqMNBZReEPqWvUOZlvZ1tM_3c6pq6M59QWdRtxZXvoHiONCoaEpbSja5NBLjIuUnhZMzxqZ9FkmZ4u6hchCNp4ZOP8GkLs3U28Ki7aJpJkU8Gkd3L9zHL5VTTFZb4jUvDZ1sszgZ0xw",
-      "e": "AQAB"
+      "kid": "2025-06-15-001",
+      "n": "s-Nu4MeVdICQW9HH5BUDSsO8_nG79exi2cNHZvCp_dD1VZkXxdTNLob6ROKzjlfkkrCLLyIojHnXlAIdbXtG4JGeFBO0cuuuD6hDvuzf9dO26AeftM6g3RXUws_oA09Go4jA8pXG8O2JMZRGiCAK0p69AMI-RMWqct3uA3bUG7RyyoYtSUpSvhzMOZK0otqQqnnsWoXpYEL3TCiyQH6x0thxxtB9lOCKLgQ525byfDga3Ul64wjjmclSe_2rTmM_LdCro0O9GGHHXLtMEG5e6TJchwum4WRRb3yJPJu57sFjKHIjZb2SnB7Pyc-_7NdO0NbEVyHqtspfLVoSajjc3Q",
+      "e": "AQAB",
+      "alg": "RS256"
     }
   ]
 }

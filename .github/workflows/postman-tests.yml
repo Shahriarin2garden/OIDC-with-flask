@@ -1,0 +1,48 @@
+name: Postman API Tests
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight UTC
+
+jobs:
+  api-test:
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.13'
+
+    - name: Install dependencies and start server
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        mkdir -p keys
+        openssl genrsa -out keys/private.pem 2048
+        openssl rsa -in keys/private.pem -pubout -out keys/public.pem
+        python -m flask run --host=0.0.0.0 --port=5000 &
+        sleep 5  # Wait for server to start
+
+    - name: Run Postman Collection
+      uses: matt-ball/newman-action@master
+      with:
+        collection: postman/OIDC_Tests.json
+        environment: postman/OIDC_Environment.json
+        timeoutRequest: 5000
+        reporters: '["cli", "junit"]'
+
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v3
+      if: always()
+      with:
+        report_paths: '**/newman/*.xml'

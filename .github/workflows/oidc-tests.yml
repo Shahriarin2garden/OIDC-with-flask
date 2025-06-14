@@ -1,0 +1,74 @@
+name: OIDC Provider Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.13'
+
+    - name: Generate RSA Keys
+      run: |
+        mkdir -p keys
+        openssl genrsa -out keys/private.pem 2048
+        openssl rsa -in keys/private.pem -pubout -out keys/public.pem
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov
+
+    - name: Generate JWKS
+      run: |
+        python -c "
+        from config import Config
+        Config.generate_jwks()
+        "
+
+    - name: Run Tests
+      env:
+        FLASK_ENV: testing
+        SECRET_KEY: test-secret-key
+        ISSUER_URL: http://localhost:5000
+        REDIS_URL: redis://localhost:6379/0
+      run: |
+        pytest tests/ --cov=. --cov-report=xml -v
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        fail_ci_if_error: true
+
+    - name: Security Analysis
+      run: |
+        pip install bandit
+        bandit -r . -x ./tests/,./venv/
+
+    - name: Type Check
+      run: |
+        pip install mypy
+        mypy . --ignore-missing-imports
