@@ -1,0 +1,95 @@
+{
+  "info": {
+    "name": "OIDC Provider Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. OpenID Configuration",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Required endpoints are present', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('authorization_endpoint');",
+              "    pm.expect(jsonData).to.have.property('token_endpoint');",
+              "    pm.expect(jsonData).to.have.property('userinfo_endpoint');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{BASE_URL}}/.well-known/openid-configuration"
+      }
+    },
+    {
+      "name": "2. Client Registration",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "var jsonData = pm.response.json();",
+              "pm.environment.set('CLIENT_ID', jsonData.client_id);",
+              "pm.environment.set('CLIENT_SECRET', jsonData.client_secret);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "url": "{{BASE_URL}}/register",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"client_name\": \"test-client\",\n    \"redirect_uris\": [\"http://localhost:3000/callback\"],\n    \"grant_types\": [\"authorization_code\", \"refresh_token\"],\n    \"response_types\": [\"code\"],\n    \"scope\": \"openid profile email\"\n}"
+        }
+      }
+    },
+    {
+      "name": "3. Authorization Request",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "const crypto = require('crypto');",
+              "",
+              "// Generate PKCE values",
+              "const codeVerifier = crypto.randomBytes(32).toString('base64url');",
+              "const codeChallenge = crypto.createHash('sha256')",
+              "    .update(codeVerifier)",
+              "    .digest('base64url');",
+              "",
+              "pm.environment.set('CODE_VERIFIER', codeVerifier);",
+              "pm.environment.set('CODE_CHALLENGE', codeChallenge);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{BASE_URL}}/authorize?response_type=code&client_id={{CLIENT_ID}}&redirect_uri={{REDIRECT_URI}}&scope=openid%20email%20profile&code_challenge={{CODE_CHALLENGE}}&code_challenge_method=S256"
+        }
+      }
+    }
+  ]
+}

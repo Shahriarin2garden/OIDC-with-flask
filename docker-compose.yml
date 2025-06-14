@@ -2,45 +2,83 @@
 version: '3.8'
 
 services:
-  app:
-    build: .
+  oidc_provider:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: oidc_provider
+    restart: unless-stopped
     ports:
       - "5000:5000"
     environment:
       FLASK_ENV: production
-      SECRET_KEY: ${SECRET_KEY}
-      ISSUER_URL: ${ISSUER_URL}
-      PRIVATE_KEY_PATH: ./private.pem
-      PUBLIC_KEY_PATH: ./public.pem
-      TOKEN_EXPIRY: ${TOKEN_EXPIRY}
-      REFRESH_TOKEN_EXPIRY: ${REFRESH_TOKEN_EXPIRY}
+      FLASK_APP: app.py
+      SECRET_KEY: ${SECRET_KEY:-default_dev_secret}
+      ISSUER_URL: ${ISSUER_URL:-http://localhost:5000}
+      PRIVATE_KEY_PATH: /app/keys/private.pem
+      PUBLIC_KEY_PATH: /app/keys/public.pem
       REDIS_URL: redis://redis:6379/0
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/.well-known/openid-configuration"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     depends_on:
       redis:
         condition: service_healthy
     networks:
-      - app_network
+      - oidc_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   redis:
     image: redis:7-alpine
+    container_name: oidc_redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-default_dev_password}
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"  # Only accessible locally
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
       interval: 30s
       timeout: 10s
-      retries: 5
+      retries: 3
     networks:
-      - app_network
+      - oidc_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 256M
+        reservations:
+          cpus: '0.10'
+          memory: 128M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   redis_data:
-    name: redis_data
+    name: oidc_redis_data
 
 networks:
-  app_network:
+  oidc_network:
+    name: oidc_network
     driver: bridge
-  
+
