@@ -1,65 +1,207 @@
+# =============================================================================
+# Python and Flask Project .gitignore
+# =============================================================================
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
 
-# Virtual environment
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# =============================================================================
+# Virtual Environments
+# =============================================================================
+.env
+.venv
+env/
 venv/
 ENV/
-env/
+env.bak/
+venv.bak/
+.virtualenv/
 
-# Environment variable files
-.env
-.env.*
-
-# Flask instance folder (if used)
+# =============================================================================
+# Flask Specific
+# =============================================================================
 instance/
+.webassets-cache
 
-# SQLite database files
+# =============================================================================
+# OIDC/OAuth/Security Related
+# =============================================================================
+# Private keys and certificates (CRITICAL - NEVER COMMIT THESE)
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+private_key.*
+public_key.*
+
+# JWT and OAuth secrets
+jwks.json
+*.jwks
+secrets.json
+client_secrets.json
+
+# Environment files with sensitive data
+.env*
+!.env.example
+config_local.py
+local_settings.py
+
+# =============================================================================
+# Database
+# =============================================================================
 *.db
 *.sqlite3
+*.sqlite
+db.sqlite3
 
-# Pytest cache
-.pytest_cache/
-*.cache
-
-# Coverage reports
-htmlcov/
-.coverage
-coverage.xml
-
-# MyPy cache
-.mypy_cache/
-
-# Build artifacts
-build/
-dist/
-*.egg-info/
-
-# Docker overrides
-docker-compose.override.yml
-
-# IDE/editor configs
+# =============================================================================
+# IDEs and Editors
+# =============================================================================
 .vscode/
 .idea/
 *.iml
+*.ipr
+*.iws
+.project
+.pydevproject
+.settings/
+*.sublime-*
+.spyderproject
+.spyproject
 
-# macOS files
+# =============================================================================
+# OS Generated Files
+# =============================================================================
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
 
-# Logs and temp files
+# Linux
+*~
+
+# =============================================================================
+# Logs and Temporary Files
+# =============================================================================
 *.log
-*.bak
+*.log.*
+logs/
 *.pid
+*.seed
+*.pid.lock
+*.bak
+*.tmp
+*.temp
 
-# Swap files
-*.swp
+# =============================================================================
+# Documentation and Build Tools
+# =============================================================================
+.mypy_cache/
+.dmypy.json
+dmypy.json
+docs/_build/
+.sphinx/
 
-# Secret keys and certificates
-private.pem
-*.key
-*.crt
-secrets.json
-
-# Jupyter notebooks
+# =============================================================================
+# Jupyter Notebooks
+# =============================================================================
 .ipynb_checkpoints/
+*.ipynb
+!*_example.ipynb
+
+# =============================================================================
+# Docker
+# =============================================================================
+docker-compose.override.yml
+.docker/
+*.dockerignore.backup
+
+# =============================================================================
+# Project Specific Outputs and Generated Files
+# =============================================================================
+outputs/
+generated/
+screenshots/
+*.out
+*.output
+
+# =============================================================================
+# Node.js (if using any JS tooling)
+# =============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =============================================================================
+# Backup and Archive Files
+# =============================================================================
+*.backup
+*.bak
+*_backup.*
+*.orig
+*.save
+*.swp
+*.swo
+*~
+
+# =============================================================================
+# AI/ML Generated Files (if applicable)
+# =============================================================================
+.qodo/

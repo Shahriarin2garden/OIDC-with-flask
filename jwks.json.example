@@ -1,0 +1,15 @@
+# JWKS.json Example Structure
+# This file will be generated automatically by the application
+# DO NOT commit the actual jwks.json file - it contains public keys
+
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "use": "sig",
+      "kid": "example-key-id",
+      "n": "example-modulus-value",
+      "e": "AQAB"
+    }
+  ]
+}
