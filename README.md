@@ -100,7 +100,7 @@ This repository provides a **complete, production-ready OpenID Connect (OIDC) Pr
 ### 🏗️ How It Works (Simple Explanation)
 
 
-   ![OIDC Architecture](https://github.com/Shahriarin2garden/OIDC-with-flask/blob/3b9fb406b70719c2900bf7e4ff9298e7420fa2fb/assets/UntitledDiagram(1).svg)
+   ![OIDC Architecture](https://github.com/Shahriarin2garden/OIDC-with-flask/blob/d91dd896f3f679398d9e995dcbd1b5f9c1c57804/assets/Untitled%20Diagram.drawio%20(7).png)
 
 
 **Step-by-Step Flow:**
