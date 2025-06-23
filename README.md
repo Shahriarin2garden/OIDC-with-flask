@@ -99,16 +99,9 @@ This repository provides a **complete, production-ready OpenID Connect (OIDC) Pr
 
 ### 🏗️ How It Works (Simple Explanation)
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Your Web App  │    │  OIDC Provider  │    │   Your Mobile   │
-│                 │    │  (This Repo)    │    │      App        │
-│  "Login" Button │───▶│                 │◀───│  "Login" Button │
-│                 │    │  • Authenticates│    │                 │
-│  Gets User Info │◀───│  • Issues Tokens│───▶│  Gets User Info │
-└─────────────────┘    │  • Manages Users│    └─────────────────┘
-                       └─────────────────┘
-```
+
+   ![OIDC Architecture](https://github.com/Shahriarin2garden/OIDC-with-flask/blob/3b9fb406b70719c2900bf7e4ff9298e7420fa2fb/assets/UntitledDiagram(1).svg)
+
 
 **Step-by-Step Flow:**
 1. **User clicks "Login"** in your app
