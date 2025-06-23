@@ -1413,19 +1413,8 @@ Below are the detailed JSON responses for each endpoint shown above:
 * **Containerization**: Docker with multi-stage builds
 * **Monitoring**: Built-in health checks and metrics
 
-#### Security Architecture
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Client App    │───▶│  OIDC Provider  │───▶│  Redis Store    │
-│  (Web/Mobile)   │    │  (Flask App)    │    │  (Sessions)     │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         │                       ▼                       │
-         │              ┌─────────────────┐               │
-         └─────────────▶│  RSA Key Pair   │◀──────────────┘
-                        │ (JWT Signing)   │
-                        └─────────────────┘
-```
+
+
 
 #### Data Flow Improvements
 1. **Enhanced PKCE Flow**: S256 code challenge with secure verifier generation
