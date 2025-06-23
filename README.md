@@ -256,7 +256,8 @@ In this lab, your goal is to implement a production-ready OIDC Provider with the
    ![OIDC Architecture](https://github.com/Shahriarin2garden/OIDC-with-flask/blob/3b9fb406b70719c2900bf7e4ff9298e7420fa2fb/assets/UntitledDiagram(1).svg)
 
 
-
+2. **OIDC Architecture Diagram** (SVG)
+  ![OIDC Architecture](https://github.com/Shahriarin2garden/OIDC-with-flask/blob/3b9fb406b70719c2900bf7e4ff9298e7420fa2fb/assets/UntitledDiagram(1).svg)
 
 
 ---
