@@ -1577,7 +1577,6 @@ With these skills, you can confidently integrate standards-compliant authenticat
 For questions, issues, or contributions:
 * 🐛 **Bug Reports**: [GitHub Issues](https://github.com/Shahriarin2garden/OIDC-with-flask/issues)
 * 💬 **Discussions**: [GitHub Discussions](https://github.com/Shahriarin2garden/OIDC-with-flask/discussions)
-* 📧 **Email Support**: project-maintainers@example.com
 * 📖 **Wiki**: [Project Wiki](https://github.com/Shahriarin2garden/OIDC-with-flask/wiki)
 
 ### 🏆 Contributors & Acknowledgments
