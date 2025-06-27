@@ -2,28 +2,27 @@
 
 **A Robust, Standards‑Compliant OpenID Connect (OIDC) Provider Built with Flask**
 
+[![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Flask](https://img.shields.io/badge/flask-3.1+-green.svg)](https://flask.palletsprojects.com/)
+[![OpenID Connect](https://img.shields.io/badge/OpenID%20Connect-1.0-orange.svg)](https://openid.net/connect/)
+[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
+
+> 🚀 **Quick Start**: Get your OIDC provider running in under 5 minutes with our automated setup scripts!
+
 ---
 
 ## 📑 Table of Contents
 
-1. [Introduction](#🚀-1-introduction)
-2. [System Overview](#🌟-2-system-overview---what-this-repository-does)
-3. [Task Description](#🎯-3-task-description)
-4. [Step-by-Step Walkthrough](#🛠️-4-step-by-step-walkthrough)   * [4.1 Clone & Set Up the Project](#41-clone--set-up-the-project)
-   * [4.2 Environment Configuration](#42-environment-configuration)
-   * [4.3 Generate RSA Keys and JWKS](#🔑-43-generate-rsa-keys-and-jwks)
-   * [4.4 Start the OIDC Provider](#▶️-44-start-the-oidc-provider)
-   * [4.5 Dynamic Client Registration](#🤝-45-dynamic-client-registration)
-   * [4.6 Authorization Code Flow with PKCE](#🔄-46-authorization-code-flow-with-pkce)
-   * [4.7 Run Automated Tests](#✅-47-run-automated-tests)
-   * [4.8 API Usage Examples](#📡-48-api-usage-examples)
-   * [4.9 API Endpoint Reference](#📋-49-api-endpoint-reference)
-5. [Additional Sections](#🔒-5-additional-sections)
-
-   * [5.1 Security Considerations](#⚙️-51-security-considerations)
-   * [5.2 Troubleshooting Tips](#🐞-52-troubleshooting-tips)
-   * [5.3 Architecture Overview](#🏛️-53-architecture-overview)
-6. [Conclusion](#🎉-6-conclusion)
+1. [🚀 Introduction](#-introduction)
+2. [🌟 System Overview](#-system-overview)
+3. [⚡ Quick Start](#-quick-start)
+4. [🛠️ Detailed Setup Guide](#️-detailed-setup-guide)
+5. [📡 API Reference](#-api-reference)
+6. [🔒 Security Features](#-security-features)
+7. [🧪 Testing](#-testing)
+8. [🚀 Deployment](#-deployment)
+9. [🐞 Troubleshooting](#-troubleshooting)
+10. [🤝 Contributing](#-contributing)
 
 ---
 
