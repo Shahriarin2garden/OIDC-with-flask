@@ -21,7 +21,7 @@ def create_error_response(error: str, description: str, status: int = 400) -> Tu
         "error_description": description
     }), status
 
-def authenticate_client() -> Tuple[Dict[str, Any], Optional[Tuple[Dict, int]]]:
+def authenticate_client_request() -> Tuple[Dict[str, Any], Optional[Tuple[Dict, int]]]:
     """Authenticate client using Basic auth or request body"""
     auth = request.authorization
     if auth:
@@ -126,17 +126,46 @@ def authorize():
         
         return render_template("login.html")
 
-    # Handle POST (login)
+    # Handle POST (login only - consent goes to /consent endpoint)
     if request.method == "POST":
+        # Debug: Print all form data
+        print(f"=== LOGIN DEBUG ===")
+        print(f"Form data keys: {list(request.form.keys())}")
+        print(f"Form data values: {dict(request.form)}")
+        print(f"Content-Type: {request.content_type}")
+        print(f"Content-Length: {request.content_length}")
+        
+        # Check if this is a consent form submission (should go to /consent endpoint)
+        if 'action' in request.form and request.form.get('action') in ['approve', 'deny']:
+            print("❌ CONSENT FORM POSTED TO WRONG ENDPOINT - Should go to /consent")
+            return create_error_response("invalid_request", "Consent form should be submitted to /consent endpoint", 400)
+        
         username = request.form.get("username")
         password = request.form.get("password")
-        print(f"Login attempt for user: {username}")
+        
+        # Additional validation
+        if username:
+            username = username.strip()
+        if password:
+            password = password.strip()
+            
+        print(f"Processed username: '{username}' (length: {len(username) if username else 0})")
+        print(f"Processed password: '***' (length: {len(password) if password else 0})")
+        
+        # Check if form data is empty
+        if not username or not password:
+            print("❌ EMPTY FORM DATA - Username or password is empty/None")
+            return create_error_response("invalid_request", "Username and password are required", 400)
         
         user = users.get(username)
-        print(f"Found user: {user}")
+        print(f"Database lookup result: {user}")
 
         if not user or user['password'] != password:  # In production, use proper password hashing
-            print("Invalid credentials")
+            print("❌ AUTHENTICATION FAILED - Invalid credentials")
+            if not user:
+                print(f"   Reason: User '{username}' not found")
+            else:
+                print(f"   Reason: Password mismatch")
             return create_error_response("invalid_credentials", "Invalid username or password", 401)
 
         session['user'] = username
@@ -197,7 +226,7 @@ def consent():
 @app.route("/token", methods=["POST"])
 def token():
     """Token endpoint"""
-    client, error = authenticate_client()
+    client, error = authenticate_client_request()
     if error:
         return error
 
@@ -283,17 +312,57 @@ def userinfo():
         return create_error_response("invalid_token", "Missing or invalid token", 401)
 
     token = auth_header.replace("Bearer ", "")
+    
+    # First try to find token in stored tokens dictionary
     token_data = tokens.get(token)
-    if not token_data:
-        return create_error_response("invalid_token", "Token not found", 401)
-
-    user = token_data["user"]
-    return jsonify({
-        "sub": user["sub"],
-        "name": user["name"],
-        "email": user["email"],
-        "email_verified": True
-    })
+    if token_data:
+        user = token_data["user"]
+        return jsonify({
+            "sub": user["sub"],
+            "name": user["name"],
+            "email": user["email"],
+            "email_verified": True
+        })
+    
+    # If not found, try to decode the JWT token (with lenient expiration checking)
+    try:
+        decoded_token = TokenService.decode_token_lenient(token)
+        sub = decoded_token.get("sub")
+        print(f"Decoded token: {decoded_token}")
+        
+        # Find user by subject
+        user = None
+        for username, user_data in users.items():
+            if user_data["sub"] == sub:
+                user = user_data
+                break
+        
+        if not user:
+            return create_error_response("invalid_token", "User not found", 401)
+            
+        return jsonify({
+            "sub": user["sub"],
+            "name": user["name"],
+            "email": user["email"],
+            "email_verified": True
+        })
+        
+    except Exception as e:
+        print(f"Token validation error: {e}")
+        # Try to decode without verification for debugging
+        try:
+            import jwt
+            from datetime import datetime, timezone
+            decoded_unverified = jwt.decode(token, options={"verify_signature": False, "verify_exp": False})
+            current_time = int(datetime.now(timezone.utc).timestamp())
+            print(f"Unverified token payload: {decoded_unverified}")
+            print(f"Current timestamp: {current_time}")
+            print(f"Token iat: {decoded_unverified.get('iat')}")
+            print(f"Token exp: {decoded_unverified.get('exp')}")
+            print(f"Time until expiry: {decoded_unverified.get('exp', 0) - current_time} seconds")
+        except Exception as debug_e:
+            print(f"Debug decode error: {debug_e}")
+        return create_error_response("invalid_token", f"Token validation failed: {str(e)}", 401)
 
 @app.before_request
 def cleanup():

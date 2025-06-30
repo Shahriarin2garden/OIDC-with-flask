@@ -16,7 +16,7 @@
             <li>{{ scope_item }}</li>
             {% endfor %}
         </ul>
-        <form method="POST">
+        <form method="POST" action="{{ url_for('consent') }}">
             <button type="submit" name="action" value="approve">Authorize</button>
             <button type="submit" name="action" value="deny" class="secondary">Deny</button>
         </form>

@@ -10,15 +10,56 @@
 <body>
     <div class="container">
         <h2>Login</h2>
-        <form method="POST">
-            <label>Username:</label>
-            <input type="text" name="username" required>
+        <div style="background-color: #e3f2fd; padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+            <p><strong>Test Credentials:</strong></p>
+            <p>Username: <code>alice</code> | Password: <code>alicepassword</code></p>
+            <p>Username: <code>bob</code> | Password: <code>bobpassword</code></p>
+        </div>
+        <form method="POST" id="loginForm" autocomplete="off">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required autocomplete="off" 
+                   placeholder="Enter username (e.g., alice)" 
+                   minlength="1" maxlength="50">
 
-            <label>Password:</label>
-            <input type="password" name="password" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required autocomplete="off"
+                   placeholder="Enter password" 
+                   minlength="1" maxlength="50">
 
-            <button type="submit">Login</button>
+            <button type="submit" id="loginBtn">Login</button>
         </form>
+        
+        <script>
+            // Prevent double submission and ensure form data is properly sent
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+                const btn = document.getElementById('loginBtn');
+                
+                // Validate that both fields have values
+                if (!username || !password) {
+                    e.preventDefault();
+                    alert('Please enter both username and password');
+                    return false;
+                }
+                
+                // Disable button to prevent double submission
+                btn.disabled = true;
+                btn.textContent = 'Logging in...';
+                
+                // Debug log (remove in production)
+                console.log('Submitting login form with:', {username: username, password: '***'});
+                
+                // Re-enable button after 3 seconds in case of error
+                setTimeout(function() {
+                    btn.disabled = false;
+                    btn.textContent = 'Login';
+                }, 3000);
+            });
+            
+            // Auto-focus on username field
+            document.getElementById('username').focus();
+        </script>
     </div>
 </body>
 </html>

@@ -52,13 +52,17 @@ class TokenService:
     @staticmethod
     def generate_id_token(sub, aud, nonce=None):
         now = datetime.now(timezone.utc)
+        iat = int(now.timestamp())
+        exp = int((now + timedelta(minutes=10)).timestamp())
+        auth_time = iat
+        
         payload = {
             "iss": "http://localhost:5000",
             "sub": sub,
             "aud": aud,
-            "iat": now,
-            "exp": now + timedelta(minutes=10),
-            "auth_time": now,
+            "iat": iat,
+            "exp": exp,
+            "auth_time": auth_time,
         }
         if nonce:
             payload["nonce"] = nonce
@@ -69,13 +73,16 @@ class TokenService:
 
     @staticmethod
     def generate_access_token(sub, scope):
-        now = datetime.datetime.utcnow()
+        now = datetime.now(timezone.utc)
+        iat = int(now.timestamp())
+        exp = int((now + timedelta(minutes=30)).timestamp())
+        
         payload = {
             "iss": "http://localhost:5000",
             "sub": sub,
             "scope": scope,
-            "iat": now,
-            "exp": now + datetime.timedelta(minutes=30)
+            "iat": iat,
+            "exp": exp
         }
 
         private_key = Config.load_private_key()
@@ -84,12 +91,15 @@ class TokenService:
 
     @staticmethod
     def generate_refresh_token(sub):
-        now = datetime.datetime.utcnow()
+        now = datetime.now(timezone.utc)
+        iat = int(now.timestamp())
+        exp = int((now + timedelta(days=30)).timestamp())
+        
         payload = {
             "iss": "http://localhost:5000",
             "sub": sub,
-            "iat": now,
-            "exp": now + datetime.timedelta(days=30),
+            "iat": iat,
+            "exp": exp,
             "type": "refresh"
         }
 
@@ -102,3 +112,10 @@ class TokenService:
         public_key = Config.load_public_key()
         key = serialization.load_pem_public_key(public_key)
         return jwt.decode(token, key=key, algorithms=["RS256"], options={"verify_aud": False})
+
+    @staticmethod
+    def decode_token_lenient(token):
+        """Decode token with lenient expiration checking (5 minute grace period)"""
+        public_key = Config.load_public_key()
+        key = serialization.load_pem_public_key(public_key)
+        return jwt.decode(token, key=key, algorithms=["RS256"], options={"verify_aud": False}, leeway=300)  # 5 minute grace period
