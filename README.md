@@ -1,4 +1,4 @@
-# 🔐 Flask OIDC Provider
+# Flask OIDC Provider
 
 **A Robust, Standards‑Compliant OpenID Connect (OIDC) Provider Built with Flask**
 
@@ -7,26 +7,26 @@
 [![OpenID Connect](https://img.shields.io/badge/OpenID%20Connect-1.0-orange.svg)](https://openid.net/connect/)
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
 
-> 🚀 **Quick Start**: Get your OIDC provider running in under 5 minutes with our automated setup scripts!
+> **Quick Start**: Get your OIDC provider running in under 5 minutes with our automated setup scripts!
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
-1. [🚀 Introduction](#-introduction)
-2. [🌟 System Overview](#-system-overview)
-3. [⚡ Quick Start](#-quick-start)
-4. [🛠️ Detailed Setup Guide](#️-detailed-setup-guide)
-5. [📡 API Reference](#-api-reference)
-6. [🔒 Security Features](#-security-features)
-7. [🧪 Testing](#-testing)
-8. [🚀 Deployment](#-deployment)
-9. [🐞 Troubleshooting](#-troubleshooting)
-10. [🤝 Contributing](#-contributing)
+1. [Introduction](#introduction)
+2. [System Overview](#system-overview)
+3. [Quick Start](#quick-start)
+4. [Detailed Setup Guide](#detailed-setup-guide)
+5. [API Reference](#api-reference)
+6. [Security Features](#security-features)
+7. [Testing](#testing)
+8. [Deployment](#deployment)
+9. [Troubleshooting](#troubleshooting)
+10. [Contributing](#contributing)
 
 ---
 
-## 🚀 1. Introduction
+## 1. Introduction
 
 Welcome to the **Flask OIDC Provider** lab. In this tutorial, you will build a fully featured OpenID Connect (OIDC) Provider from the ground up using Python and Flask. By following these instructions, you will:
 
@@ -47,7 +47,7 @@ OAuth 2.0 is an industry-standard framework for delegated authorization. It dec
 * **Client**: Third-party application requesting access.
 * **Grant Types**: Methods clients use to obtain tokens (e.g., authorization code, client credentials, implicit, resource owner password).
 
-### 🔍 1.2 What is OpenID Connect?
+### 1.2 What is OpenID Connect?
 
 OpenID Connect (OIDC) extends OAuth 2.0 by introducing an identity layer. It standardizes how clients verify user identity and obtain user profile information via JSON Web Tokens (JWTs). Core additions include:
 
@@ -56,7 +56,7 @@ OpenID Connect (OIDC) extends OAuth 2.0 by introducing an identity layer. It st
 * **Discovery Endpoint**: Provides metadata about supported flows and endpoints.
 * **JWKS Endpoint**: Publishes public keys for token verification.
 
-### ⚖️ 1.3 Key Differences
+### 1.3 Key Differences
 
 | Feature     | OAuth 2.0                | OpenID Connect (OIDC)      |
 | ----------- | ------------------------ | -------------------------- |
@@ -65,7 +65,7 @@ OpenID Connect (OIDC) extends OAuth 2.0 by introducing an identity layer. It st
 | Metadata    | Not standardized         | Standardized discovery API |
 | Format      | Any opaque token (often) | JSON Web Token (JWT)       |
 
-### 🎁 1.4 Benefits of OpenID Connect
+### 1.4 Benefits of OpenID Connect
 
 * **Unified Protocol**: Single framework for authN and authZ.
 * **Interoperability**: Widely supported across platforms.
@@ -74,13 +74,13 @@ OpenID Connect (OIDC) extends OAuth 2.0 by introducing an identity layer. It st
 
 ---
 
-## � 2. System Overview - What This Repository Does
+## 2. System Overview - What This Repository Does
 
-### �🎯 For Beginners: What Is This Project?
+### For Beginners: What Is This Project?
 
 This repository provides a **complete, production-ready OpenID Connect (OIDC) Provider** built with Python and Flask. Think of it as your own "Login with..." service (like "Login with Google" or "Login with Facebook") that you can host and control yourself.
 
-### 🔍 What Problem Does This Solve?
+### What Problem Does This Solve?
 
 **The Problem**: Modern applications need secure user authentication, but building it from scratch is complex and error-prone. You need to handle:
 - User login and password security
@@ -90,13 +90,13 @@ This repository provides a **complete, production-ready OpenID Connect (OIDC) Pr
 - Mobile app authentication
 
 **The Solution**: This OIDC Provider acts as a centralized authentication hub that:
-- ✅ Handles all user authentication securely
-- ✅ Issues standardized tokens (JWT) that apps can trust
-- ✅ Manages user sessions across multiple applications
-- ✅ Provides APIs for app integration
-- ✅ Follows industry security standards (OAuth 2.0 + OpenID Connect)
+- Handles all user authentication securely
+- Issues standardized tokens (JWT) that apps can trust
+- Manages user sessions across multiple applications
+- Provides APIs for app integration
+- Follows industry security standards (OAuth 2.0 + OpenID Connect)
 
-### 🏗️ How It Works (Simple Explanation)
+### How It Works (Simple Explanation)
 
 
    ![OIDC Architecture](https://github.com/Shahriarin2garden/OIDC-with-flask/blob/d91dd896f3f679398d9e995dcbd1b5f9c1c57804/assets/Untitled%20Diagram.drawio%20(7).png)
@@ -110,9 +110,9 @@ This repository provides a **complete, production-ready OpenID Connect (OIDC) Pr
 5. **Provider issues secure tokens** and redirects back to your app
 6. **Your app uses tokens** to get user information and grant access
 
-### 🛠️ What You Get Out of the Box
+### What You Get Out of the Box
 
-#### 🔐 **Core Authentication Features**
+#### **Core Authentication Features**
 - **User Login System**: Ready-to-use login forms and user management
 - **Secure Token Generation**: JWT tokens signed with RSA encryption
 - **Session Management**: Handles user sessions across multiple devices
@@ -157,7 +157,7 @@ Other developers want to build apps that connect to your platform:
 - Their users can authorize access without sharing passwords
 - You control what data each third-party app can access
 
-### 🧪 **Try It Yourself** (5-Minute Quick Start)
+### **Try It Yourself** (5-Minute Quick Start)
 
 ```bash
 # 1. Clone the repository
@@ -187,7 +187,7 @@ curl http://localhost:5000/.well-known/openid-configuration
 - API endpoints responding with authentication metadata
 - Working examples you can test immediately
 
-### 📚 **What You'll Learn**
+### **What You'll Learn**
 
 By working with this repository, you'll understand:
 - **OAuth 2.0 & OpenID Connect**: Industry-standard authentication protocols
@@ -196,7 +196,7 @@ By working with this repository, you'll understand:
 - **Flask Development**: Building robust Python web applications
 - **Production Deployment**: Taking code from development to live systems
 
-### 🔒 **Security Features** (Why This Is Production-Ready)
+### **Security Features** (Why This Is Production-Ready)
 
 - **Industry Standards**: Fully compliant with OAuth 2.0 and OpenID Connect 1.0
 - **PKCE Protection**: Prevents authorization code interception attacks
@@ -205,7 +205,7 @@ By working with this repository, you'll understand:
 - **Rate Limiting**: Built-in protection against brute force attacks
 - **Input Validation**: Comprehensive protection against injection attacks
 
-### 🚀 **Next Steps**
+### **Next Steps**
 
 1. **Quick Start**: Follow the 5-minute setup above to see it running
 2. **Read the Tutorial**: Complete walkthrough in sections below
@@ -215,7 +215,7 @@ By working with this repository, you'll understand:
 
 ---
 
-## 🎯 3. Task Description
+## 3. Task Description
 
 In this lab, your goal is to implement a production-ready OIDC Provider with the following capabilities:
 
@@ -364,7 +364,7 @@ OIDC-with-flask/
 - **`README.md`**: This comprehensive documentation file
 - **`postman_tests.md`**: API testing documentation and examples
 
-### 🔒 Security Note
+### Security Note
 Ensure the following files are properly secured in production:
 - `keys/private.pem` - Never commit to version control
 - `.env` files - Use proper secret management
@@ -374,11 +374,11 @@ Ensure the following files are properly secured in production:
 
 ---
 
-## 🛠️ 4. Step-by-Step Walkthrough
+## 4. Step-by-Step Walkthrough
 
 Follow these detailed instructions to set up, configure, and run your OIDC Provider:
 
-### 🚀 Quick Setup (Updated June 2025)
+### Quick Setup (Updated June 2025)
 
 For the latest version with all recent improvements:
 
@@ -488,7 +488,7 @@ python test_client.py
    ```
 3. \*\*Confirm \*\*\`\` is populated with key IDs (`kid`) and algorithms.
 
-### ▶️ 4.4 Start the OIDC Provider
+### 4.4 Start the OIDC Provider
 
 * **In‑Memory Mode (default)**:
 
@@ -514,7 +514,7 @@ curl http://localhost:5000/.well-known/openid-configuration
 
 Expect JSON with endpoints such as `authorization_endpoint`, `token_endpoint`, etc.
 
-### 🤝 4.5 Dynamic Client Registration
+### 4.5 Dynamic Client Registration
 
 Programmatically register clients with your provider:
 
@@ -578,7 +578,7 @@ curl -X POST http://localhost:5000/register \
    curl -H 'Authorization: Bearer <access_token>' http://localhost:5000/userinfo
    ```
 
-### 🧪 Enhanced Testing Suite (2025)
+### Enhanced Testing Suite (2025)
 
 #### Automated Testing
 ```bash
@@ -682,7 +682,7 @@ curl -H 'Authorization: Bearer <access_token>' \
      http://localhost:5000/userinfo
 ```
 
-### 🔧 Advanced API Usage Examples
+### Advanced API Usage Examples
 
 #### Complete OIDC Flow with Real Values
 
@@ -1012,7 +1012,7 @@ server {
 | POST   | `/introspect`                       | Introspect token validity   | Basic/Auth         |
 | GET    | `/userinfo`                         | Retrieve user claims        | Bearer Token       |
 
-### 🔐 Additional Security Features
+### Additional Security Features
 
 #### Advanced Authentication Options
 
@@ -1060,7 +1060,7 @@ server {
 - Token binding to client certificates
 - Audience-specific token validation
 
-### 🌐 Integration Examples
+### Integration Examples
 
 #### Integration with Popular Frameworks
 
