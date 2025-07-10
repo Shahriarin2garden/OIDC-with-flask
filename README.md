@@ -101,6 +101,7 @@ This repository provides a **complete, production-ready OpenID Connect (OIDC) Pr
 
    ![OIDC Architecture](https://github.com/Shahriarin2garden/OIDC-with-flask/blob/d91dd896f3f679398d9e995dcbd1b5f9c1c57804/assets/Untitled%20Diagram.drawio%20(7).png)
 
+  ![OIDC Architecture](https://github.com/Shahriarin2garden/OIDC-with-flask/blob/9317195e0ca1c36edbda99a663a634cf0f3362c6/assets/OIDC.drawio%20(4).svg)
 
 **Step-by-Step Flow:**
 1. **User clicks "Login"** in your app
